@@ -74,3 +74,5 @@ end
 gem "slack-ruby-client", "~> 2.1"
 
 gem "slack-ruby-bot", "~> 0.16.1"
+
+gem "dotenv-rails", "~> 2.8"
