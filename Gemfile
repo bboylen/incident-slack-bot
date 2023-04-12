@@ -70,3 +70,7 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "slack-ruby-client", "~> 2.1"
+
+gem "slack-ruby-bot", "~> 0.16.1"
