@@ -4,7 +4,10 @@ class CreateIncidents < ActiveRecord::Migration[7.0]
       t.string :title, null: false
       t.string :description
       t.string :creator, null: false
-      t.integer :severity
+      t.string :status, null: false
+      t.string :slack_channel_id, null: false
+      t.string :severity
+      t.datetime :resolved_at
       t.timestamps
     end
   end

@@ -15,7 +15,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_014037) do
     t.string "title", null: false
     t.string "description"
     t.string "creator", null: false
-    t.integer "severity"
+    t.string "status", null: false
+    t.string "slack_channel_id", null: false
+    t.string "severity"
+    t.datetime "resolved_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
