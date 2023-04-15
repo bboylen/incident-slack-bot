@@ -6,80 +6,16 @@ class SlackController < ApplicationController
     command_text = params[:text]
     case command_text.split.first
     when 'declare'
-      handle_declare(command_text)
+      response_payload = DeclareHandler.handle_declare(params, command_text)
     when 'resolve'
-      handle_resolve
+      response_payload = ResolveHandler.handle_resolve(params)
     else
-      render_unknown_command
+      response_payload = unknown_command_response_payload
     end
+    render json: response_payload
   end
 
   private
-
-  def handle_declare(command_text)
-    title, description, severity = parse_declare_arguments(command_text)
-
-    # need to add check if channel already exists
-    channel = create_slack_channel(title)
-
-    incident = Incident.create(title: title, description: description, severity: severity, status: 'open',
-      creator: params[:user_name], slack_channel_id: channel["id"])
-
-    invite_user_to_channel(params[:user_id], channel['id'])
-
-    message = "Incident Title: #{title}\nDescription: #{description}\nSeverity: #{severity}"
-    slack_client.chat_postMessage(channel: channel['id'], text: message)
-
-    render json: {
-      text: "Incident declared successfully! A new channel has been created: ##{channel['name']}"
-    }
-  end
-
-  def handle_resolve
-    incident = Incident.find_by(slack_channel_id: params[:channel_id])
-
-    if incident.present? && incident.status == 'open'
-      incident.update(status: 'resolved', resolved_at: Time.current)
-      time_to_resolution = (incident.resolved_at - incident.created_at).to_i
-
-      render json: {
-        text: "Incident resolved successfully! Time to resolution: #{time_to_resolution} seconds."
-      }
-    else
-      render json: {
-        text: "Error: This command is only available in open Slack incident channels."
-      }
-    end
-  end
-
-  def parse_declare_arguments(command_text)
-    _, *args = command_text.split
-
-    title = args.shift
-    description = args.shift
-    severity = args.shift
-
-    [title, description, severity]
-  end
-
-  def create_slack_channel(title)
-    # handle error if channel name taken
-    response = slack_client.conversations_create(name: title.downcase.gsub(' ', '-'))
-    if response['ok']
-      response['channel']
-    else
-      raise "Error creating Slack channel: #{response['error']}"
-    end
-  end
-
-  def invite_user_to_channel(user_id, channel_id)
-    response = slack_client.conversations_invite(channel: channel_id, users: user_id)
-    if response['ok']
-      true
-    else
-      raise "Error inviting user to Slack channel: #{response['error']}"
-    end
-  end
 
   def render_unknown_command
     render json: {
