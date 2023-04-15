@@ -22,7 +22,8 @@ class SlackController < ApplicationController
     # need to add check if channel already exists
     channel = create_slack_channel(title)
 
-    incident = Incident.create(title: title, description: description, severity: severity, status: 'open', creator: params[:user_name], slack_channel_id: channel["id"])
+    incident = Incident.create(title: title, description: description, severity: severity, status: 'open',
+      creator: params[:user_name], slack_channel_id: channel["id"])
 
     invite_user_to_channel(params[:user_id], channel['id'])
 
@@ -53,9 +54,11 @@ class SlackController < ApplicationController
 
   def parse_declare_arguments(command_text)
     _, *args = command_text.split
+
     title = args.shift
-    description = args.join(' ')
-    severity = args.include?('sev0') ? 'sev0' : args.include?('sev1') ? 'sev1' : args.include?('sev2') ? 'sev2' : nil
+    description = args.shift
+    severity = args.shift
+
     [title, description, severity]
   end
 
