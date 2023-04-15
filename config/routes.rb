@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
   root 'incidents#index'
 
-  post 'slack/declare' => 'slack#declare'
+  post 'slack/rootly' => 'slack#rootly'
 end
