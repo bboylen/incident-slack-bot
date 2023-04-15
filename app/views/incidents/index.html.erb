@@ -1,1 +1,21 @@
-<div>Welcome</div>
+<h1>Incidents</h1>
+<table class="incidents-table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Severity</th>
+      <th>Creator</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @incidents.each do |incident| %>
+      <tr>
+        <td><%= incident.title %></td>
+        <td><%= incident.description %></td>
+        <td><%= incident.severity %></td>
+        <td><%= incident.creator %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
