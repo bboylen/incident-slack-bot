@@ -26,6 +26,9 @@ class SlackController < ApplicationController
 
     invite_user_to_channel(params[:user_id], channel['id'])
 
+    message = "Incident Title: #{title}\nDescription: #{description}\nSeverity: #{severity}"
+    slack_client.chat_postMessage(channel: channel['id'], text: message)
+
     render json: {
       text: "Incident declared successfully! A new channel has been created: ##{channel['name']}"
     }
@@ -57,10 +60,8 @@ class SlackController < ApplicationController
   end
 
   def create_slack_channel(title)
-    client = Slack::Web::Client.new
-
     # handle error if channel name taken
-    response = client.conversations_create(name: title.downcase.gsub(' ', '-'))
+    response = slack_client.conversations_create(name: title.downcase.gsub(' ', '-'))
     if response['ok']
       response['channel']
     else
@@ -69,8 +70,7 @@ class SlackController < ApplicationController
   end
 
   def invite_user_to_channel(user_id, channel_id)
-    client = Slack::Web::Client.new
-    response = client.conversations_invite(channel: channel_id, users: user_id)
+    response = slack_client.conversations_invite(channel: channel_id, users: user_id)
     if response['ok']
       true
     else
@@ -98,5 +98,9 @@ class SlackController < ApplicationController
     if !ActiveSupport::SecurityUtils.secure_compare(my_signature, signature)
       render json: { error: 'Invalid request (signature mismatch)' }, status: :unauthorized
     end
+  end
+
+  def slack_client
+    @slack_client ||= Slack::Web::Client.new
   end
 end
