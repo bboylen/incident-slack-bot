@@ -1,0 +1,18 @@
+databases:
+  - name: incident_slack_bot
+    databaseName: incident_slack_bot
+    user: incident_slack_bot
+
+services:
+  - type: web
+    name: incident_slack_bot
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: incident_slack_bot
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false

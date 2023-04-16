@@ -14,8 +14,4 @@ test:
 
 production:
   <<: *default
-  database: incident_slack_bot_production
-  username: yourapp
-  password: <%= ENV['YOURAPP_DATABASE_PASSWORD'] %>
-  host: <%= ENV['YOURAPP_DATABASE_HOST'] %>
-  port: <%= ENV['YOURAPP_DATABASE_PORT'] %>
+  url: <%= ENV['DATABASE_URL'] %>
