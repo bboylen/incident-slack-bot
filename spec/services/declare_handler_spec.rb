@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe DeclareHandler, type: :service do
-  let(:params) { { user_name: 'test_user', user_id: 'U12345678' } }
+  let(:workspace) { FactoryBot.create(:workspace) }
+  let(:params) { { user_name: 'test_user', user_id: 'U12345678', team_id: workspace.workspace_id } }
   let(:command_text) { 'declare Test Incident test description sev1' }
 
   describe '.handle_declare' do
