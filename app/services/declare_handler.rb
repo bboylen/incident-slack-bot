@@ -19,12 +19,12 @@ class DeclareHandler
     rescue StandardError => e
       return { text: "Error creating Incident slack channel" }
     end
-  
-    incident = Incident.create(title: title, description: description, severity: severity, status: 'open', creator: params[:user_name], slack_channel_id: channel["id"])
+
+    incident = Incident.create!(title: title, description: description, severity: severity, status: 'open', creator: params[:user_name], slack_channel_id: channel["id"])
   
     invite_user_to_channel(params[:user_id], channel['id'])
   
-    message = "Incident Title: #{title}\nDescription: #{description}\nSeverity: #{severity}"
+    message = "Incident Title: #{incident.title}\nDescription: #{incident.description}\nSeverity: #{incident.severity}"
     slack_client.chat_postMessage(channel: channel['id'], text: message)
   
     { text: "Incident declared successfully! A new channel has been created: ##{channel['name']}" }
@@ -39,10 +39,6 @@ class DeclareHandler
     title = args.shift
     description = args.shift
     severity = args.shift
-
-    # information should be moved to Severity model
-    allowed_severities = ['sev1', 'sev2', 'sev3']
-    severity = nil unless allowed_severities.include?(severity)
 
     [title, description, severity]
   end
