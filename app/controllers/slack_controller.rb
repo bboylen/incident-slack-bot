@@ -1,6 +1,10 @@
 class SlackController < ApplicationController
+  # include SlackClientHandler
+
   skip_before_action :verify_authenticity_token
-  before_action :verify_slack_request
+  before_action :verify_slack_request, only: [:rootly]
+  # before_action :set_slack_client, only: [:rootly]
+
 
   def rootly
     command_text = params[:text]
@@ -37,9 +41,5 @@ class SlackController < ApplicationController
     if !ActiveSupport::SecurityUtils.secure_compare(my_signature, signature)
       render json: { error: 'Invalid request (signature mismatch)' }, status: :unauthorized
     end
-  end
-
-  def slack_client
-    @slack_client ||= Slack::Web::Client.new
   end
 end

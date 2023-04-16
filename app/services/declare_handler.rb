@@ -1,4 +1,5 @@
 class DeclareHandler
+  include Shared::SlackClientHandler
   attr :params
 
   class << self
@@ -21,7 +22,7 @@ class DeclareHandler
     end
 
     incident = Incident.create!(title: title, description: description, severity: severity, status: 'open', creator: params[:user_name], slack_channel_id: channel["id"])
-  
+
     invite_user_to_channel(params[:user_id], channel['id'])
   
     message = "Incident Title: #{incident.title}\nDescription: #{incident.description}\nSeverity: #{incident.severity}"
@@ -55,10 +56,6 @@ class DeclareHandler
 
   def invite_user_to_channel(user_id, channel_id)
     slack_client.conversations_invite(channel: channel_id, users: user_id)
-  end
-
-  def slack_client
-    @slack_client ||= Slack::Web::Client.new
   end
 end
 

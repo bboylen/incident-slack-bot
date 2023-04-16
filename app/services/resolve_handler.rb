@@ -1,4 +1,5 @@
 class ResolveHandler
+  include Shared::SlackClientHandler
   attr :params
 
   class << self
@@ -26,12 +27,6 @@ class ResolveHandler
         text: "Error: This command is only available in open Slack incident channels."
       }
     end
-  end
-
-  private
-
-  def slack_client
-    @slack_client ||= Slack::Web::Client.new
   end
 end
 
