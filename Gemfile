@@ -64,11 +64,18 @@ group :development do
   # gem "spring"
 end
 
+group :development, :test do
+  gem 'rspec-rails', '~> 5.1.0'
+  gem 'factory_bot_rails', '~> 6.1'
+  gem 'faker', '~> 2.20'
+end
+
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 gem "slack-ruby-client", "~> 2.1"
@@ -76,3 +83,7 @@ gem "slack-ruby-client", "~> 2.1"
 gem "slack-ruby-bot", "~> 0.16.1"
 
 gem "dotenv-rails", "~> 2.8"
+
+# gem "pagy"
+
+# gem "pagy_cursor", "~> 0.2.0"
